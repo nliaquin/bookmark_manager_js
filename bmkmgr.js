@@ -25,4 +25,27 @@ function addBookmark(name, hyperlink, category, filePath = "bookmarks.json") {
     return true;
 }
 
-module.exports = { loadBookmarks, saveBookmarks, addBookmark };
+function printBookmarks(filePath = "bookmarks.json", output = console.log) {
+    const bookmarks = loadBookmarks(filePath);
+    if (bookmarks.length === 0) {
+        output("No bookmarks found.");
+        return;
+    }
+
+    bookmarks.sort((a, b) =>
+        a.category.localeCompare(b.category) || a.name.localeCompare(b.name)
+    );
+
+    const grouped = {};
+    bookmarks.forEach(({ name, hyperlink, category }) => {
+        if (!grouped[category]) grouped[category] = [];
+        grouped[category].push(`${name} - ${hyperlink}`);
+    });
+
+    Object.keys(grouped).forEach(category => {
+        output(`\n ${category}:`);
+        grouped[category].forEarch(entry => output(entry));
+    });
+}
+
+module.exports = { loadBookmarks, saveBookmarks, addBookmark, printBookmarks };
