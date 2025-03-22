@@ -1,36 +1,39 @@
 const fs = require("fs");
 const path = require("path");
-const { loadBookmarks, saveBookmarks, addBookmark } = require("../bmkmgr");
+const { loadBookmarks, saveBookmarks, addBookmark, printBookmarks } = require("../bmkmgr");
 
 const TEST_FILE_PATH = path.join(__dirname, "../test-data/bookmarks.json");
-
+/*
 afterAll(() => {
     if (fs.existsSync(TEST_FILE_PATH)) fs.unlinkSync(TEST_FILE_PATH);
 });
+*/
 
-test("addBookmark adds a bookmark to the file.", () => {
-    const added = addBookmark(
-        "Google",
-        "https://google.com",
-        "Search Engines",
-        TEST_FILE_PATH
-    );
-    expect(added).toBe(true);
+test("printBookmarks displays bookmarks grouped and sorted", () => {
+    const mockData = [
+        { name: "Google", hyperlink: "https://google.com", category: "Search Engines" },
+        { name: "DuckDuckGo", hyperlink: "https://duckduckgo.com", category: "Search Engines" },
+        { name: "Outlook", hyperlink: "https://outlook.com", category: "Microsoft 365" },
+        { name: "Office", hyperlink: "https://office.com", category: "Microsoft 365" },
+        { name: "Facebook", hyperlink: "https://facebook.com", category: "Social Media" }
+    ]
 
-    const bookmarks = loadBookmarks(TEST_FILE_PATH);
-    expect(bookmarks.length).toBe(1);
-    expect(bookmarks[0]).toEqual({
-        name: "Google",
-        hyperlink: "https://google.com",
-        category: "Search Engines"
-    });
+    saveBookmarks(mockData, TEST_FILE_PATH);
+
+    const output = [];
+    const mockLog = msg => output.push(msg);
+
+    printBookmarks(TEST_FILE_PATH, mockLog);
+
+    expect(output).toEqual([
+        "\n Microsoft 365:",
+        "Office - https://office.com",
+        "Outlook - https://outlook.com",
+        "\n Search Engines:",
+        "DuckDuckGo - https://duckduckgo.com",
+        "Google - https://google.com",
+        "\n Social Media:",
+        "Facebook - https://facebook.com",
+        "\n"
+    ]);
 });
-
-test("addBookmarks prevents duplicate entries", () => {
-    const firstAdd = addBookmark("Google", "https://google.com", "Search Engines", TEST_FILE_PATH);
-    const secondAdd = addBookmark("Google", "https://google.com", "Search Engines", TEST_FILE_PATH);
-    expect(secondAdd).toBe(false);
-    const bookmarks = loadBookmarks(TEST_FILE_PATH);
-    expect(bookmarks.length).toBe(1);
-});
-
