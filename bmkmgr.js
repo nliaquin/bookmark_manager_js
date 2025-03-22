@@ -21,14 +21,14 @@ function addBookmark(name, hyperlink, category, filePath = "bookmarks.json") {
 
     bookmarks.push({ name, hyperlink, category });
     saveBookmarks(bookmarks, filePath);
-    console.log(` Added: ${name}`);
+    console.log(` Added: ${name}\n`);
     return true;
 }
 
 function printBookmarks(filePath = "bookmarks.json", output = console.log) {
     const bookmarks = loadBookmarks(filePath);
     if (bookmarks.length === 0) {
-        output("No bookmarks found.");
+        output("No bookmarks found.\n");
         return;
     }
 
@@ -44,8 +44,9 @@ function printBookmarks(filePath = "bookmarks.json", output = console.log) {
 
     Object.keys(grouped).forEach(category => {
         output(`\n ${category}:`);
-        grouped[category].forEarch(entry => output(entry));
+        grouped[category].forEach(entry => output(entry));
     });
+    output("\n");
 }
 
 module.exports = { loadBookmarks, saveBookmarks, addBookmark, printBookmarks };
