@@ -11,4 +11,18 @@ function saveBookmarks(bookmarks, filePath = "bookmarks.json") {
     fs.writeFileSync(filePath, JSON.stringify(bookmarks, null, 4), "utf8");
 }
 
-module.exports = { loadBookmarks, saveBookmarks };
+function addBookmark(name, hyperlink, category, filePath = "bookmarks.json") {
+    const bookmarks = loadBookmarks(filePath);
+
+    if (bookmarks.some(b => b.name.toLowerCase() === name.toLowerCase())) {
+        console.log(`Bookmark "${name}" already exists. Use update instead.`);
+        return false;
+    }
+
+    bookmarks.push({ name, hyperlink, category });
+    saveBookmarks(bookmarks, filePath);
+    console.log(` Added: ${name}`);
+    return true;
+}
+
+module.exports = { loadBookmarks, saveBookmarks, addBookmark };
