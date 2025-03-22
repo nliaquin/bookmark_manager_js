@@ -1,0 +1,27 @@
+{
+    "name": "bookmark_manager_js",
+    "version": "1.0.0",
+    "description": "A bookmarks manager written in JavaScript.",
+    "main": "bmkmgr.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/nliaquin/bookmark_manager_js.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "type": "commonjs",
+    "bugs": {
+        "url": "https://github.com/nliaquin/bookmark_manager_js/issues"
+    },
+    "homepage": "https://github.com/nliaquin/bookmark_manager_js#readme",
+    "devDependencies": {
+        "jest": "^29.7.0"
+    },
+    "scripts": {
+        "test": "jest"
+    }
+}
