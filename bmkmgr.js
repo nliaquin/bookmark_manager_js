@@ -76,7 +76,7 @@ function deleteBookmark(name, filePath = "bookmarks.json") {
         b => b.name.toLowerCase() !== name.toLowerCase()
     );
 
-    if (nameBookmarks.length === bookmarks.length) {
+    if (newBookmarks.length === bookmarks.length) {
         console.log(`Bookmark "${name}" not found.`);
         return false;
     }
