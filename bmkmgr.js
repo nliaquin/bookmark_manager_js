@@ -86,4 +86,41 @@ function deleteBookmark(name, filePath = "bookmarks.json") {
     return true;
 }
 
+const args = process.argv.slice(2);
+const command = args[0];
+
+switch (command) {
+    case "add":
+        if (args.length !== 4) {
+            console.log("Usage: node bookmarks.js add <name> <hyperlink> <category>");
+        } else {
+            addBookmark(args[1], args[2], args[3]);
+        }
+        break;
+
+    case "print":
+        printBookmarks();
+        break;
+
+    case "update":
+        if (args.length !== 4) {
+            console.log("Usage: node bookmarks.js update <name> <field> <newValue>");
+        } else {
+            const [ , name, field, newValue ] = args;
+            updateBookmark(name, field, newValue);
+        }
+        break;
+
+    case "delete":
+        if (args.length !== 2) {
+            console.log("Usage: node bookmarks.js delete <name>");
+        } else {
+            deleteBookmark(args[1]);
+        }
+        break;
+
+    default:
+        console.log("Invalid command. Use: add, print, update, delete.");
+}
+
 module.exports = { loadBookmarks, saveBookmarks, addBookmark, printBookmarks, updateBookmark, deleteBookmark };
