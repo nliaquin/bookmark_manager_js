@@ -1,27 +1,7 @@
 [
     {
-        "name": "Google",
-        "hyperlink": "https://google.com",
-        "category": "Search Engines"
-    },
-    {
-        "name": "DuckDuckGo",
-        "hyperlink": "https://duckduckgo.com",
-        "category": "Search Engines"
-    },
-    {
         "name": "Outlook",
         "hyperlink": "https://outlook.com",
         "category": "Microsoft 365"
-    },
-    {
-        "name": "Office",
-        "hyperlink": "https://office.com",
-        "category": "Microsoft 365"
-    },
-    {
-        "name": "Facebook",
-        "hyperlink": "https://facebook.com",
-        "category": "Social Media"
     }
 ]

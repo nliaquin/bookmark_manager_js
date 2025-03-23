@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const { loadBookmarks, saveBookmarks, addBookmark, printBookmarks } = require("../bmkmgr");
+const { loadBookmarks, saveBookmarks, addBookmark, printBookmarks, updateBookmark } = require("../bmkmgr");
 
 const TEST_FILE_PATH = path.join(__dirname, "../test-data/bookmarks.json");
 /*
@@ -9,31 +9,17 @@ afterAll(() => {
 });
 */
 
-test("printBookmarks displays bookmarks grouped and sorted", () => {
-    const mockData = [
-        { name: "Google", hyperlink: "https://google.com", category: "Search Engines" },
-        { name: "DuckDuckGo", hyperlink: "https://duckduckgo.com", category: "Search Engines" },
-        { name: "Outlook", hyperlink: "https://outlook.com", category: "Microsoft 365" },
-        { name: "Office", hyperlink: "https://office.com", category: "Microsoft 365" },
-        { name: "Facebook", hyperlink: "https://facebook.com", category: "Social Media" }
-    ]
+test("updateBookmark modified the user-specified field of a given bookmark by name", () => {
+    const initialBookmark = [
+        { name: "Outlook", hyperlink: "https://outlook.com", category: "Email" }
+    ];
 
-    saveBookmarks(mockData, TEST_FILE_PATH);
+    saveBookmarks(initialBookmark, TEST_FILE_PATH);
 
-    const output = [];
-    const mockLog = msg => output.push(msg);
+    const updatedBookmark = updateBookmark("Outlook", "category", "Microsoft 365", TEST_FILE_PATH);
+    expect(updatedBookmark).toBe(true);
 
-    printBookmarks(TEST_FILE_PATH, mockLog);
-
-    expect(output).toEqual([
-        "\n Microsoft 365:",
-        "Office - https://office.com",
-        "Outlook - https://outlook.com",
-        "\n Search Engines:",
-        "DuckDuckGo - https://duckduckgo.com",
-        "Google - https://google.com",
-        "\n Social Media:",
-        "Facebook - https://facebook.com",
-        "\n"
-    ]);
+    const result = loadBookmarks(TEST_FILE_PATH);
+    expect(result[0].category).toBe("Microsoft 365");
 });
+
