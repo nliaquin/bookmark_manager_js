@@ -1,34 +1,33 @@
 const fs = require("fs");
-//We're not hardcoding the file path right now for the sake of running tests.
-//const FILE_PATH = "bookmarks.json";
+const FILE_PATH = "bookmarks.json";
 
-function loadBookmarks(filePath = "bookmarks.json") {
-    if (!fs.existsSync(filePath)) return [];
-    return JSON.parse(fs.readFileSync(filePath, "utf8"));
+function loadBookmarks() {
+    if (!fs.existsSync(FILE_PATH)) return [];
+    return JSON.parse(fs.readFileSync(FILE_PATH, "utf8"));
 }
 
-function saveBookmarks(bookmarks, filePath = "bookmarks.json") {
-    fs.writeFileSync(filePath, JSON.stringify(bookmarks, null, 4), "utf8");
+function saveBookmarks(bookmarks) {
+    fs.writeFileSync(FILE_PATH, JSON.stringify(bookmarks, null, 4), "utf8");
 }
 
-function addBookmark(name, hyperlink, category, filePath = "bookmarks.json") {
-    const bookmarks = loadBookmarks(filePath);
+function addBookmark(name, hyperlink, category) {
+    const bookmarks = loadBookmarks();
 
     if (bookmarks.some(b => b.name.toLowerCase() === name.toLowerCase())) {
-        console.log(`Bookmark "${name}" already exists. Use update instead.`);
+        console.log(`Bookmark "${name}" already exists. Use update instead.\n`);
         return false;
     }
 
     bookmarks.push({ name, hyperlink, category });
-    saveBookmarks(bookmarks, filePath);
-    console.log(` Added: ${name}\n`);
+    saveBookmarks(bookmarks, FILE_PATH);
+    console.log(`Bookmark "${name}" added.\n`);
     return true;
 }
 
-function printBookmarks(filePath = "bookmarks.json", output = console.log) {
-    const bookmarks = loadBookmarks(filePath);
+function printBookmarks() {
+    const bookmarks = loadBookmarks();
     if (bookmarks.length === 0) {
-        output("No bookmarks found.\n");
+        console.log("No bookmarks found.\n");
         return;
     }
 
@@ -39,22 +38,21 @@ function printBookmarks(filePath = "bookmarks.json", output = console.log) {
     const grouped = {};
     bookmarks.forEach(({ name, hyperlink, category }) => {
         if (!grouped[category]) grouped[category] = [];
-        grouped[category].push(`${name} - ${hyperlink}`);
+        grouped[category].push(`${name} - ${hyperlink}\n`);
     });
 
     Object.keys(grouped).forEach(category => {
-        output(`\n ${category}:`);
-        grouped[category].forEach(entry => output(entry));
+        console.log(`\n ${category}:`);
+        grouped[category].forEach(entry => console.log(entry));
     });
-    output("\n");
 }
 
-function updateBookmark(name, field, newValue, filePath = "bookmarks.json") {
-    const bookmarks = loadBookmarks(filePath);
+function updateBookmark(name, field, newValue) {
+    const bookmarks = loadBookmarks();
     const index = bookmarks.findIndex(b => b.name.toLowerCase() === name.toLowerCase());
 
     if (index === -1) {
-        console.log(`Bookmakr "${name}" not found.`);
+        console.log(`Bookmark "${name}" not found.`);
         return false;
     }
 
@@ -65,13 +63,13 @@ function updateBookmark(name, field, newValue, filePath = "bookmarks.json") {
     }
 
     bookmarks[index][field] = newValue;
-    saveBookmarks(bookmarks, filePath);
+    saveBookmarks(bookmarks);
     console.log(`Updated ${field} of "${name}" to "${newValue}".`);
     return true;
 }
 
-function deleteBookmark(name, filePath = "bookmarks.json") {
-    const bookmarks = loadBookmarks(filePath);
+function deleteBookmark(name) {
+    const bookmarks = loadBookmarks();
     const newBookmarks = bookmarks.filter(
         b => b.name.toLowerCase() !== name.toLowerCase()
     );
@@ -81,7 +79,7 @@ function deleteBookmark(name, filePath = "bookmarks.json") {
         return false;
     }
 
-    saveBookmarks(newBookmarks, filePath);
+    saveBookmarks(newBookmarks);
     console.log(`Deleted bookmark "${name}".`);
     return true;
 }
@@ -92,7 +90,7 @@ const command = args[0];
 switch (command) {
     case "add":
         if (args.length !== 4) {
-            console.log("Usage: node bookmarks.js add <name> <hyperlink> <category>");
+            console.log("Usage: node bmkmgr.js add <name> <hyperlink> <category>");
         } else {
             addBookmark(args[1], args[2], args[3]);
         }
@@ -104,7 +102,7 @@ switch (command) {
 
     case "update":
         if (args.length !== 4) {
-            console.log("Usage: node bookmarks.js update <name> <field> <newValue>");
+            console.log("Usage: node bmkmgr.js update <name> <field> <newValue>");
         } else {
             const [ , name, field, newValue ] = args;
             updateBookmark(name, field, newValue);
@@ -113,7 +111,7 @@ switch (command) {
 
     case "delete":
         if (args.length !== 2) {
-            console.log("Usage: node bookmarks.js delete <name>");
+            console.log("Usage: node bmkmgr.js delete <name>");
         } else {
             deleteBookmark(args[1]);
         }
@@ -123,4 +121,3 @@ switch (command) {
         console.log("Invalid command. Use: add, print, update, delete.");
 }
 
-module.exports = { loadBookmarks, saveBookmarks, addBookmark, printBookmarks, updateBookmark, deleteBookmark };
