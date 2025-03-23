@@ -49,4 +49,25 @@ function printBookmarks(filePath = "bookmarks.json", output = console.log) {
     output("\n");
 }
 
-module.exports = { loadBookmarks, saveBookmarks, addBookmark, printBookmarks };
+function updateBookmark(name, field, newValue, filePath = "bookmarks.json") {
+    const bookmarks = loadBookmarks(filePath);
+    const index = bookmarks.findIndex(b => b.name.toLowerCase() === name.toLowerCase());
+
+    if (index === -1) {
+        console.log(`Bookmakr "${name}" not found.`);
+        return false;
+    }
+
+    const validFields = ["name", "hyperlink", "category"];
+    if (!validFields.includes(field)) {
+        console.log(`Invalid field "${field}".`);
+        return false;
+    }
+
+    bookmarks[index][field] = newValue;
+    saveBookmarks(bookmarks, filePath);
+    console.log(`Updated ${field} of "${name}" to "${newValue}".`);
+    return true;
+}
+
+module.exports = { loadBookmarks, saveBookmarks, addBookmark, printBookmarks, updateBookmark };
