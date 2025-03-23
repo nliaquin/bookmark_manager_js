@@ -70,4 +70,20 @@ function updateBookmark(name, field, newValue, filePath = "bookmarks.json") {
     return true;
 }
 
-module.exports = { loadBookmarks, saveBookmarks, addBookmark, printBookmarks, updateBookmark };
+function deleteBookmark(name, filePath = "bookmarks.json") {
+    const bookmarks = loadBookmarks(filePath);
+    const newBookmarks = bookmarks.filter(
+        b => b.name.toLowerCase() !== name.toLowerCase()
+    );
+
+    if (nameBookmarks.length === bookmarks.length) {
+        console.log(`Bookmark "${name}" not found.`);
+        return false;
+    }
+
+    saveBookmarks(newBookmarks, filePath);
+    console.log(`Deleted bookmark "${name}".`);
+    return true;
+}
+
+module.exports = { loadBookmarks, saveBookmarks, addBookmark, printBookmarks, updateBookmark, deleteBookmark };
